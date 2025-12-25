@@ -5,14 +5,22 @@ import { usePasienStore } from "@/store/pasien.store";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import DataTable from "../common/DataTable";
 import Pagination from "../common/Pagination";
+import { Input } from "../ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 const PAGE_SIZE = 5;
 
 export default function PasienTable() {
   const { pasien, loading, fetchPasien } = usePasienStore();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState<string>("");
   const [sortBy, setSortBy] = useState<"nama" | "tanggal">("nama");
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
     fetchPasien();
@@ -48,10 +56,9 @@ export default function PasienTable() {
   }
 
   return (
-    <>
+    <div className="space-y-4">
       <div className="flex gap-2 mb-4">
-        <input
-          className="border p-2 rounded w-full"
+        <Input
           placeholder="Cari Nama / NIK"
           onChange={(e) => {
             setSearch(e.target.value);
@@ -59,13 +66,18 @@ export default function PasienTable() {
           }}
         />
 
-        <select
-          className="border p-2 rounded"
-          onChange={(e) => setSortBy(e.target.value as "nama" | "tanggal")}
+        <Select
+          defaultValue="nama"
+          onValueChange={(v) => setSortBy(v as "nama" | "tanggal")}
         >
-          <option value="nama">Sort Nama</option>
-          <option value="tanggal">Sort Tanggal Masuk</option>
-        </select>
+          <SelectTrigger className="w-37.5">
+            <SelectValue placeholder="Sort By" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="nama">Sort Nama</SelectItem>
+            <SelectItem value="tanggal">Sort Tanggal Masuk</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <DataTable headers={["Nama", "NIK", "Tanggal", "Dokter"]}>
@@ -80,6 +92,6 @@ export default function PasienTable() {
       </DataTable>
 
       <Pagination page={page} totalPages={totalPages} onChange={setPage} />
-    </>
+    </div>
   );
 }

@@ -8,7 +8,7 @@ export default function PasienPage() {
       <div className="flex justify-between mb-4">
         <h1 className="text-xl font-semibold">Daftar Pasien Aktif</h1>
         <Link href="/pasien-masuk">
-          <Button>+ Pasien Masuk</Button>
+          <Button className="cursor-pointer bg-blue-900 hover:bg-blue-800">+ Pasien Masuk</Button>
         </Link>
       </div>
 

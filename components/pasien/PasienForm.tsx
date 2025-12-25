@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { usePasienStore } from "@/store/pasien.store";
 import { FormState } from "@/types/pasien";
+import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 export default function PasienForm() {
   const router = useRouter();
@@ -38,18 +40,29 @@ export default function PasienForm() {
   };
 
   const submit = () => {
-    if (!validate()) return;
+    if (!validate()) {
+      toast.error("Gagal menyimpan pasien");
+      return;
+    }
 
     addPasien({
       id: crypto.randomUUID(),
       ...form,
     });
 
+    toast.success("Pasien berhasil ditambahkan");
     router.push("/pasien");
   };
 
   return (
     <div className="max-w-xl space-y-4">
+      {error && (
+        <Alert variant="destructive">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
       <Input
         placeholder="Nama Pasien"
         onChange={(e) => setForm({ ...form, nama: e.target.value })}
@@ -76,9 +89,12 @@ export default function PasienForm() {
         onChange={(e) => setForm({ ...form, ruangan: e.target.value })}
       />
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
-
-      <Button onClick={submit}>Simpan Pasien</Button>
+      <Button
+        onClick={submit}
+        className="cursor-pointer bg-green-500 hover:bg-green-600"
+      >
+        Simpan Pasien
+      </Button>
     </div>
   );
 }
